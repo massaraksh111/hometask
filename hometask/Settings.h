@@ -32,12 +32,12 @@ struct Settings
 		meshCount = 3
 	};
 
-
 	float torusRotation[torusCount];
 	GLuint programs[lightsCount];
 	GLuint colorTexture;
 	std::pair<GLuint, std::string> depthTextures[lightsCount];
 	GLuint depthFBO[lightsCount];
+
 	int cursorPos[Two];
 	int rotateDelta[Two];
 	int moveDelta[Two];

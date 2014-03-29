@@ -12,6 +12,17 @@ struct Camera
 	vec3 position;
 	vec3 rotation;
 	mat4 projection;
+
+	Camera(GLuint program, const mat4 &model);
+	void lookAt(const vec3 &position, const vec3 &center, const vec3 &up);
+	void perspective(float fov, float aspect, float zNear, float zFar);
+	void ortho(float left, float right, 
+			   float bottom, float top,
+			   float zNear, float zFar);
+	void rotate(float x, float y, float z);
+	void move(float x, float y, float z);
+	void setup(GLuint program, const mat4 &model);
+	void setupLight(GLuint program, std::string prefix);
 };
 
 void CameraLookAt(Camera &camera, const vec3 &position, const vec3 &center, const vec3 &up);

@@ -7,9 +7,10 @@
 
 void InitLights()
 {
-		// настроим направленные источники освещения
+	// настроим направленные источники освещения
 	LightDefault(settings().lights[0], LT_DIRECTIONAL);
-	settings().lights[0].position.set(3.0f, 3.0f, 3.0f, 0.0f);
+	settings().lights[0].position.set(4.0f, 4.0f, 4.0f, 0.0f);
+	
 	LightDefault(settings().lights[1], LT_DIRECTIONAL);
 	settings().lights[1].position.set(-5.0f, 4.0f, 3.0f, 0.0f);
 
@@ -70,13 +71,13 @@ void InitCamera(const GLWindow &window)
 	CameraLookAt(settings().mainCamera, vec3(-5.0f, 10.0f, 10.0f), vec3_zero, vec3_y);
 	CameraPerspective(settings().mainCamera, 45.0f, aspectRatio, 0.5f, 100.0f);
 
-	// камеры НАПРАВЛЕННЫХ источников света
+	// камеры источников света
 	CameraLookAt(settings().lightCamera[0], settings().lights[0].position, -settings().lights[0].position, vec3_y);
 	CameraOrtho(settings().lightCamera[0], -5.0f, 5.0f, -5.0f, 5.0f, -10.0f, 10.0f);
+
 	CameraLookAt(settings().lightCamera[1], settings().lights[1].position, -settings().lights[1].position, vec3_y);
 	CameraOrtho(settings().lightCamera[1], -5.0f, 5.0f, -5.0f, 5.0f, -10.0f, 10.0f);
 
-	// камера ТОЧЕЧНОГО источника света
 	CameraLookAt(settings().lightCamera[2], settings().lights[2].position, -settings().lights[2].position, vec3_y);
 	CameraPerspective(settings().lightCamera[2], 45.0f, aspectRatio, 0.5f, 10.0f);
 

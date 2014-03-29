@@ -8,54 +8,54 @@ static const mat4 bias(
 	0.0f, 0.0f, 0.0f, 1.0f
 );
 
-void CameraCreate(Camera &camera, float x, float y, float z)
+void Camera::create(float x, float y, float z)
 {
 	// зададим позицию камеры и еденичную матрицу проекции
-	camera.position   = vec3(x, y, z);
-	camera.rotation   = vec3_zero;
-	camera.projection = mat4_identity;
+	position   = vec3(x, y, z);
+	rotation   = vec3_zero;
+	projection = mat4_identity;
 }
 
-void CameraLookAt(Camera &camera, const vec3 &position, const vec3 &center, const vec3 &up)
+void Camera::lookAt(const vec3 &position, const vec3 &center, const vec3 &up)
 {
-	camera.rotation = GLToEuler(GLLookAt(position, center, up));
-	camera.position = position;
+	rotation = GLToEuler(GLLookAt(position, center, up));
+	position = position;
 }
 
-void CameraPerspective(Camera &camera, float fov, float aspect, float zNear, float zFar)
+void Camera::perspective(float fov, float aspect, float zNear, float zFar)
 {
 	// расчет перспективной матрицы проекции
-	camera.projection = GLPerspective(fov, aspect, zNear, zFar);
+	projection = GLPerspective(fov, aspect, zNear, zFar);
 }
 
-void CameraOrtho(Camera &camera, float left, float right,
+void Camera::ortho(float left, float right,
 	float bottom, float top, float zNear, float zFar)
 {
 	// расчет ортографической матрицы проекции
-	camera.projection = GLOrthographic(left, right, bottom, top, zNear, zFar);
+	projection = GLOrthographic(left, right, bottom, top, zNear, zFar);
 }
 
-void CameraRotate(Camera &camera, float x, float y, float z)
+void Camera::rotate(float x, float y, float z)
 {
 	// увеличение углов вращения камеры
-	camera.rotation += vec3(x, y, z);
+	rotation += vec3(x, y, z);
 }
 
-void CameraMove(Camera &camera, float x, float y, float z)
+void Camera::move(float x, float y, float z)
 {
 	// сначала нам надо перевести вектор направления в локальные координаты камеры
 	// для этого нам надо инвертировать матрицу вращения камеры и умножить ее на вектор
 	// однако для матрицы вращения транспонирование дает тот же результат что инвертирование
-	vec3 move = transpose(mat3(GLFromEuler(camera.rotation))) * vec3(x, y, z);
+	vec3 move = transpose(mat3(GLFromEuler(rotation))) * vec3(x, y, z);
 
-	camera.position += move;
+	position += move;
 }
 
-void CameraSetup(GLuint program, const Camera &camera, const mat4 &model)
+void Camera::setup(GLuint program, const mat4 &model)
 {
 	// расчитаем необходимые матрицы
-	mat4 view           = GLFromEuler(camera.rotation) * GLTranslation(-camera.position);
-	mat4 viewProjection = camera.projection * view;
+	mat4 view           = GLFromEuler(rotation) * GLTranslation(-position);
+	mat4 viewProjection = projection * view;
 	mat3 normal         = transpose(mat3(inverse(model)));
 
 	mat4 modelViewProjection = viewProjection * model;
@@ -69,14 +69,14 @@ void CameraSetup(GLuint program, const Camera &camera, const mat4 &model)
 		1, GL_TRUE, modelViewProjection.m);
 
 	// передаем позицию наблюдателя (камеры) в шейдерную программу
-	glUniform3fv(glGetUniformLocation(program, "transform.viewPosition"), 1, camera.position.v);
+	glUniform3fv(glGetUniformLocation(program, "transform.viewPosition"), 1, position.v);
 }
 
-void CameraSetupLight(GLuint program, const Camera &camera, std::string prefix)
+void Camera::setupLight(GLuint program, const std::string prefix)
 {
 	// расчитаем необходимые матрицы
-	mat4 view           = GLFromEuler(camera.rotation) * GLTranslation(-camera.position);
-	mat4 viewProjection = bias * camera.projection * view;
+	mat4 view           = GLFromEuler(rotation) * GLTranslation(-position);
+	mat4 viewProjection = bias * Camera::projection * view;
 	
 	// передадим матрицу источника освещения в шейдерную программу
 	glUniformMatrix4fv(glGetUniformLocation(program,  prefix.insert(0, "transform.").c_str()), 1, GL_TRUE, viewProjection.m);

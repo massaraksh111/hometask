@@ -6,7 +6,7 @@ void LightDefault(Light &light, LightType type)
 	light.type = type;
 
 	light.ambient.set(0.0f, 0.0f, 0.0f, 1.0f);
-	light.diffuse.set(1.0f, 1.0f, 1.0f, 1.0f);
+	light.diffuse.set(1.0f, 1.0f, 10.0f, 1.0f);
 	light.specular.set(1.0f, 1.0f, 1.0f, 1.0f);
 	light.position.set(0.0f, 0.0f, 1.0f, 0.0f);
 	light.attenuation.set(1.0f, 0.0f, 0.0f);

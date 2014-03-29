@@ -28,7 +28,8 @@ bool GLWindowInit(const GLWindow &window)
 	InitGround();
 	InitFigures();
 	InitCamera(window);
-	CreateFBO();
+	if(!CreateFBO())
+		return false;
 	
 	// проверим не было ли ошибок
 	OPENGL_CHECK_FOR_ERRORS();
